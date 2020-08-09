@@ -15,11 +15,12 @@ body, head {
   width: 80%;
   height: 100%;
 
+  margin: auto;
+
   overflow: auto;
 }
 
 #textview {
-  position: absolute;
   background-color: antiquewhite;
   padding: 16px;
 
@@ -27,11 +28,5 @@ body, head {
   text-align: center;
   color: #000;
 
-  top: 50%;
-  left: 50%;
-
-  transform: translate(-50%, -50%);
-
-  width: auto;
-  height: auto;
+  margin: auto;
 }

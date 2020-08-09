@@ -1,78 +1,12 @@
-var hesistationFact = .8;
-var mistypingFact = .1;
+var autotyper = new AutoTyper();
+autotyper.setListener((text) => {
+  document.getElementById('textview').innerHTML = text;
+});
 
-var text = 'Hello World! I just learned writing like a real hoooman. Look at me ^^';
-var textview = document.getElementById('textview');
-
-var keyboardLayout = [
-  ['1!', '2"', '3§', '4$', '5%', '6&', '7/', '8(', '9)', '0=', 'ß?', '´`'],
-   ['qQ', 'wW', 'eE', 'rR', 'tT', 'zZ', 'uU', 'iI', 'oO', 'pP', 'üÜ', '+*'],
-    ['aA', 'sS', 'dD', 'fF', 'gG', 'hH', 'jJ', 'kK', 'lL', 'öÖ', 'äÄ', '#\''],
-  ['<>', 'yY', 'xX', 'cC', 'vV', 'bB', 'nN', 'mM', ',;', '.:', '-_', '']
-];
-
-var overallTimeout = 0;
-var shifted = false;
-for(let y = 0; y < text.length; y++) {
-  let character = text.charAt(y);
-  
-  if((/^[a-zA-Z]*$/).test(character))
-    shifted = character === character.toUpperCase();
-
-  if(Math.random() < mistypingFact) {
-    // find character in keyboardLayout
-    let xPos;
-    let yPos;
-    for(let y = 0; y < keyboardLayout.length; y++) {
-      const row = keyboardLayout[y];
-      for(let x = 0; x < row.length; x++) {
-        const characterInRow = row[x];
-        if(characterInRow.includes(character)) {
-          xPos = x;
-          yPos = y;
-
-          break;
-        }
-      }
-    }
-
-    if(xPos != null && yPos != null) {
-      // find direct neighbours to character
-      let neighbours = [];
-
-      for(let dY = -1; dY <= 1; dY++) {
-        if(yPos + dY > 0 && yPos + dY < keyboardLayout.length-1) {
-          for(let dX = -1; dX < 2; dX += 2) {
-            if(xPos + dX > 0 && xPos + dX < keyboardLayout[yPos + dY].length-1) {
-              neighbours.push(keyboardLayout[yPos + dY][xPos + dX]);
-            }
-          }
-        }
-      }
-
-      // choose typo
-      const index = Math.floor(Math.random() * (neighbours.length-1));
-      
-      let wrongCharacter = neighbours[index].charAt(0);
-      if(shifted) {
-        wrongCharacter = neighbours[index].charAt(1);
-      }
-
-      // Mistyping + Correcting
-      queue(() => { textview.innerHTML += wrongCharacter; });
-      queue(() => { textview.innerHTML = textview.innerHTML.slice(0, -1); });
-    }
-  }
-
-  queue(() => { textview.innerHTML += character; });
-}
-
-function queue(handler) {
-  overallTimeout += getVariedDelay();
-
-  setTimeout(handler, overallTimeout);
-}
-
-function getVariedDelay() {
-  return (Math.random() * hesistationFact) * (Math.random() * 400 + 80);
-}
+autotyper.setHesitationFactor(.4);
+autotyper.setMistypingFactor(.02);
+autotyper.type( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer in dictum erat. Fusce volutpat porta ligula vel faucibus. Mauris tempor ipsum mi, ac tempus sapien venenatis et. Aliquam erat volutpat. Maecenas facilisis ac lectus sed sollicitudin. Praesent dapibus bibendum ipsum nec tincidunt. Duis sed nisl ex. Etiam ultricies tellus non leo feugiat interdum. In purus sem, posuere sed congue a, congue vitae ipsum. Phasellus id semper quam, vel volutpat est. Maecenas mollis ornare tempus. Nulla sodales porta nisi sit amet scelerisque. Nam id nibh massa. Donec tempor vestibulum lorem ac sollicitudin.\n' +
+                'Ut justo nisl, vestibulum eget venenatis ultricies, commodo ut dui. Aliquam erat volutpat. In at consequat urna. Etiam mattis hendrerit felis, ac vulputate elit pharetra vel. Maecenas iaculis venenatis risus, ut sagittis ipsum vehicula non. Ut quis mattis augue. Nam ultricies mi non nisl maximus dignissim. In tristique placerat ex sed blandit. Nullam ullamcorper justo vitae justo ultricies, sit amet fermentum eros aliquet. Nullam et neque magna. Maecenas imperdiet cursus arcu ac lobortis. Phasellus ornare est ut urna mollis gravida. Aenean a nisl gravida, fermentum dui sit amet, semper felis. Aliquam semper sed purus ac sagittis.\n' +
+                'Praesent non vulputate risus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris vehicula nisl ut arcu venenatis faucibus. Aenean interdum elit diam, a tempus nisl lacinia vitae. Nulla faucibus odio ipsum. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Pellentesque imperdiet mauris pretium risus tincidunt, eu tincidunt metus egestas. Sed tincidunt euismod orci, at imperdiet magna sagittis eu. Praesent sem quam, vehicula vitae magna vitae, luctus maximus ipsum. Donec et fermentum purus, convallis finibus leo.\n' +
+                'Interdum et malesuada fames ac ante ipsum primis in faucibus. Etiam dictum pharetra ex, nec maximus eros dignissim in. Vivamus in tellus dapibus, ultrices lacus nec, pharetra nibh. Ut non porttitor leo, ac vehicula turpis. Nullam malesuada tristique aliquam. Integer vulputate iaculis placerat. Nulla viverra nibh at facilisis sagittis. Vivamus at nibh eros. Vivamus consequat eros eget ante malesuada, vel venenatis felis vulputate. Nam sed augue luctus ex dignissim convallis. Nunc purus arcu, dapibus et libero ac, viverra sagittis velit. Quisque aliquet ligula lorem, ultrices rhoncus lorem pellentesque quis. Nullam pulvinar metus sed neque lacinia, vel fermentum mauris vestibulum. Suspendisse in mauris dignissim, condimentum neque a, molestie urna.\n' +
+                'Curabitur mauris enim, laoreet eu dapibus vitae, efficitur sodales erat. Aliquam vel sapien placerat, scelerisque dui eu, lobortis velit. Integer semper felis nisi, at sollicitudin enim dictum mollis. Morbi a lectus nulla. Etiam fermentum porttitor turpis eget scelerisque. Nam enim lorem, auctor nec pharetra non, varius eget dui. Morbi faucibus at justo id semper.');  
